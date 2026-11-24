@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:background="@drawable/control" android:minHeight="76dp">
+    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:id="@+id/row_name" android:text="" android:textSize="16sp" android:textColor="#17352F" android:layout_weight="1" android:padding="12dp" android:textStyle="bold"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/row_badge" android:text="" android:textSize="13sp" android:textColor="#17352F" android:padding="8dp" android:layout_margin="6dp" android:background="@drawable/control"/>
+</LinearLayout>

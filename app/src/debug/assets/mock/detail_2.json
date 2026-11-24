@@ -1,0 +1,34 @@
+{
+  "stationId": "KECO:0002",
+  "name": "샘플 중앙로 충전소",
+  "latitude": 35.873,
+  "longitude": 128.597,
+  "distanceM": 435,
+  "profile": "DC_COMBO",
+  "asOf": "2026-11-12T14:00:00+09:00",
+  "totalCount": 2,
+  "availableCount": 0,
+  "chargingCount": 2,
+  "otherCount": 0,
+  "unknownCount": 0,
+  "freshness": "FRESH",
+  "prediction": {
+    "asOf": "2026-11-12T14:00:00+09:00",
+    "targetAt": "2026-11-12T14:30:00+09:00",
+    "probability": 0
+  },
+  "chargers": [
+    {
+      "chgerId": "01",
+      "typeCode": "04",
+      "outputKw": 50,
+      "status": "CHARGING"
+    },
+    {
+      "chgerId": "02",
+      "typeCode": "04",
+      "outputKw": 50,
+      "status": "CHARGING"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "method": "WEIGHTED",
+  "items": [
+    {
+      "stationId": "KECO:0001",
+      "name": "샘플 동성로 충전소",
+      "latitude": 35.8714,
+      "longitude": 128.6014,
+      "distanceM": 0,
+      "profile": "DC_COMBO",
+      "asOf": "2026-11-12T14:00:00+09:00",
+      "totalCount": 3,
+      "availableCount": 2,
+      "chargingCount": 1,
+      "otherCount": 0,
+      "unknownCount": 0,
+      "freshness": "FRESH",
+      "prediction": {
+        "asOf": "2026-11-12T14:00:00+09:00",
+        "targetAt": "2026-11-12T14:30:00+09:00",
+        "probability": 0.82
+      },
+      "rank": 1,
+      "reason": "현재 가용 2대, 검색 위치에서 가까움"
+    },
+    {
+      "stationId": "KECO:0002",
+      "name": "샘플 중앙로 충전소",
+      "latitude": 35.873,
+      "longitude": 128.597,
+      "distanceM": 435,
+      "profile": "DC_COMBO",
+      "asOf": "2026-11-12T14:00:00+09:00",
+      "totalCount": 2,
+      "availableCount": 0,
+      "chargingCount": 2,
+      "otherCount": 0,
+      "unknownCount": 0,
+      "freshness": "FRESH",
+      "prediction": {
+        "asOf": "2026-11-12T14:00:00+09:00",
+        "targetAt": "2026-11-12T14:30:00+09:00",
+        "probability": 0
+      },
+      "rank": 2,
+      "reason": "검색 위치 인근의 호환 충전소"
+    }
+  ]
+}

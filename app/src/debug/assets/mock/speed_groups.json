@@ -1,0 +1,42 @@
+{
+  "KECO:0001": [
+    {
+      "speed": "FAST",
+      "available": 2,
+      "total": 3,
+      "stale": false,
+      "charging": 1,
+      "other": 0,
+      "unknown": 0
+    },
+    {
+      "speed": "SLOW",
+      "available": 1,
+      "total": 1,
+      "stale": false,
+      "charging": 0,
+      "other": 0,
+      "unknown": 0
+    }
+  ],
+  "KECO:0002": [
+    {
+      "speed": "FAST",
+      "available": 0,
+      "total": 2,
+      "stale": false,
+      "charging": 2,
+      "other": 0,
+      "unknown": 0
+    },
+    {
+      "speed": "SLOW",
+      "available": 0,
+      "total": 1,
+      "stale": true,
+      "charging": 0,
+      "other": 0,
+      "unknown": 1
+    }
+  ]
+}

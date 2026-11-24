@@ -1,0 +1,66 @@
+{
+  "KECO:0001": {
+    "ALL": {
+      "profile": "ALL",
+      "probability": 0.76,
+      "connector": "DC콤보 · AC 완속",
+      "output": "7–50 kW"
+    },
+    "FAST": {
+      "profile": null,
+      "probability": null,
+      "connector": "DC콤보",
+      "output": "50 kW"
+    },
+    "SLOW": {
+      "profile": "AC_SLOW",
+      "probability": 0,
+      "connector": "AC 완속 (02)",
+      "output": "7 kW"
+    },
+    "fresh": {
+      "asOf": "2026-11-12T14:00:00+09:00",
+      "targetAt": "2026-11-12T14:30:00+09:00"
+    },
+    "delayed": {
+      "asOf": "2026-11-12T13:45:00+09:00",
+      "targetAt": null
+    },
+    "slowCharger": {
+      "id": "04",
+      "state": "이용 가능"
+    }
+  },
+  "KECO:0002": {
+    "ALL": {
+      "profile": "ALL",
+      "probability": null,
+      "connector": "DC콤보 · AC 완속",
+      "output": "7–50 kW"
+    },
+    "FAST": {
+      "profile": null,
+      "probability": null,
+      "connector": "DC콤보",
+      "output": "50 kW"
+    },
+    "SLOW": {
+      "profile": "AC_SLOW",
+      "probability": null,
+      "connector": "AC 완속 (02)",
+      "output": "7 kW"
+    },
+    "fresh": {
+      "asOf": "2026-11-12T14:00:00+09:00",
+      "targetAt": "2026-11-12T14:30:00+09:00"
+    },
+    "delayed": {
+      "asOf": "2026-11-12T13:45:00+09:00",
+      "targetAt": null
+    },
+    "slowCharger": {
+      "id": "03",
+      "state": "정보 확인 필요"
+    }
+  }
+}
