@@ -1,9 +1,10 @@
-<?xml version="1.0" ?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center_vertical" android:padding="30dp" android:fitsSystemWindows="true" android:background="#103C34">
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ϟ" android:textSize="56sp" android:textColor="#A4F1B7"/>
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="WattUp" android:textSize="48sp" android:textColor="#FFFFFF" android:textStyle="bold"/>
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="전기차 충전소 찾기" android:textSize="22sp" android:textColor="#DAF1E5" android:paddingBottom="42dp"/>
-    <Button android:layout_width="match_parent" android:layout_height="54dp" android:id="@+id/browse" android:text="로그인 없이 둘러보기" android:background="@drawable/control" android:textColor="#164D40" android:minWidth="48dp" android:paddingHorizontal="12dp" android:layout_margin="2dp"/>
-    <Button android:id="@+id/kakao_login" android:layout_width="match_parent" android:layout_height="50dp" android:layout_marginBottom="6dp" android:background="@drawable/control" android:text="카카오 로그인 · 준비 중"/>
-    <Button android:id="@+id/google_login" android:layout_width="match_parent" android:layout_height="50dp" android:layout_marginBottom="6dp" android:background="@drawable/control" android:text="Google 로그인 · 준비 중"/>
-</LinearLayout>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" android:background="@color/canvas" android:fitsSystemWindows="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center_vertical" android:padding="32dp" android:fitsSystemWindows="true" android:background="@color/canvas">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ϟ" android:textSize="42sp" android:textColor="@color/ink" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="WattUp" android:textSize="48sp" android:textColor="@color/ink" android:textStyle="bold" android:letterSpacing="-0.04" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="전기차 충전소 찾기" android:textSize="19sp" android:textColor="@color/body" android:paddingBottom="48dp" />
+        <Button android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/browse" android:text="로그인 없이 둘러보기" android:background="@drawable/primary" android:textColor="@color/surface" android:minWidth="48dp" android:paddingHorizontal="12dp" android:layout_margin="2dp" android:minHeight="54dp" android:layout_marginBottom="10dp" />
+        <Button android:id="@+id/kakao_login" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" android:background="@drawable/control" android:text="카카오 로그인 · 준비 중" android:minHeight="54dp" />
+        <Button android:id="@+id/google_login" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" android:background="@drawable/control" android:text="Google 로그인 · 준비 중" android:minHeight="54dp" />
+    </LinearLayout>
+</ScrollView>

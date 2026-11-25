@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-feature android:glEsVersion="0x00020000" android:required="true" />
-    <application android:label="WattUp" android:theme="@android:style/Theme.Material.Light.NoActionBar">
+    <application android:label="WattUp" android:theme="@style/WattUpTheme">
         <activity android:name=".MainActivity" android:enableOnBackInvokedCallback="true" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

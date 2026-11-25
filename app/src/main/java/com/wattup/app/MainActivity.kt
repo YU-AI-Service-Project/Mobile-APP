@@ -53,6 +53,7 @@ class MainActivity : Activity() {
     private var listMode = false
     private var backRegistered = false
     private val internalBack by lazy { android.window.OnBackInvokedCallback { returnToPreviousView() } }
+    private var locationMessage = ""
     private var recommendationMode = false
     private var rows = emptyList<StationRow>()
     private val stationLabels = mutableListOf<Label>()
@@ -136,7 +137,7 @@ class MainActivity : Activity() {
         }
         val freshness = if (stale || !row.countsReliable) "정보 확인 필요" else "정상 갱신"
         show(R.id.detail_fresh, "$freshness · $timestamp")
-        sheet.findViewById<TextView>(R.id.detail_fresh).setTextColor(if (stale || !row.countsReliable) 0xffa63232.toInt() else 0xff12634f.toInt())
+        sheet.findViewById<TextView>(R.id.detail_fresh).setTextColor(getColor(R.color.body))
         if (detail == null) return
         fun count(value: Int?) = value?.let { "${it}대" } ?: "정보 없음"
         val counts = "전체 ${count(row.total)} · 가용 ${row.available}대 · 충전 중 ${count(row.charging)} · 기타 ${count(row.other)} · 미확인 ${count(row.unknown)}"
@@ -271,6 +272,13 @@ class MainActivity : Activity() {
         findViewById<ListView>(R.id.station_list).setOnItemClickListener { _, _, index, _ ->
             rows.getOrNull(index)?.let(::openDetail)
         }
+        val more = findViewById<Button>(R.id.filter_more)
+        val filters = findViewById<View>(R.id.filters)
+        more.setOnClickListener {
+            val opening = filters.visibility != View.VISIBLE
+            filters.visibility = if (opening) View.VISIBLE else View.GONE
+            more.text = if (opening) "필터 접기" else "필터 더보기"
+        }
         val fast = findViewById<ToggleButton>(R.id.fast)
         val slow = findViewById<ToggleButton>(R.id.slow)
         val available = findViewById<ToggleButton>(R.id.available)
@@ -327,7 +335,11 @@ class MainActivity : Activity() {
         text(R.id.page_title).text = when { recommendationMode -> "Top-3 추천"; listMode -> "주변 충전소 목록"; else -> "내 주변 충전소" }
         findViewById<View>(R.id.locate).visibility = if (mapVisible) View.VISIBLE else View.GONE
         findViewById<View>(R.id.search).visibility = if (mapVisible && confirmed != null && candidate != confirmed) View.VISIBLE else View.GONE
-        findViewById<View>(R.id.selection).visibility = if (mapVisible) View.VISIBLE else View.GONE
+        val pending = confirmed != null && candidate != confirmed
+        text(R.id.selection).apply {
+            text = if (pending) "선택한 핀 · ${format(candidate)}" else locationMessage
+            visibility = if (mapVisible && text.isNotEmpty()) View.VISIBLE else View.GONE
+        }
         if (!mapVisible) findViewById<View>(R.id.notice).visibility = View.GONE
         findViewById<View>(R.id.map_container).visibility = if (mapVisible) View.VISIBLE else View.GONE
         findViewById<View>(R.id.hint).visibility = if (mapVisible) View.VISIBLE else View.GONE
@@ -358,7 +370,8 @@ class MainActivity : Activity() {
                     val distance = String.format(Locale.KOREA, "직선거리 %.2f km", row.meters / 1000.0)
                     val speed = speedLookups[row.id] ?: row.speedText
                     val observed = row.observedLabel?.let { "\n관측 $it" }.orEmpty()
-                    card.findViewById<TextView>(R.id.row_name).text = "${row.name}\n$distance · $speed$observed"
+                    card.findViewById<TextView>(R.id.row_name).text = row.name
+                    card.findViewById<TextView>(R.id.row_meta).text = "$distance · $speed$observed"
                     if (listMode && !recommendationMode && row.needsSpeedLookup && !speedLookups.containsKey(row.id)) {
                         speedLookups[row.id] = null
                         val revision = requestId
@@ -386,7 +399,7 @@ class MainActivity : Activity() {
         stopLocation()
         val content = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            val pad = (16 * resources.displayMetrics.density).toInt()
+            val pad = (24 * resources.displayMetrics.density).toInt()
             setPadding(pad, pad, pad, pad)
         }
         val input = SearchView(this).apply {
@@ -465,13 +478,21 @@ class MainActivity : Activity() {
     private fun openMyPage() {
         val page = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            val pad = (20 * resources.displayMetrics.density).toInt()
+            val pad = (28 * resources.displayMetrics.density).toInt()
             setPadding(pad, pad, pad, pad)
         }
         fun action(label: String, run: () -> Unit) {
-            page.addView(Button(this).apply { text = label; setOnClickListener { run() } })
+            val params = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+            params.bottomMargin = (10 * resources.displayMetrics.density).toInt()
+            page.addView(Button(this).apply {
+                text = label
+                gravity = Gravity.START or Gravity.CENTER_VERTICAL
+                val inset = (20 * resources.displayMetrics.density).toInt()
+                setPadding(inset, inset / 2, inset, inset / 2)
+                setOnClickListener { run() }
+            }, params)
         }
-        page.addView(TextView(this).apply { text = "비회원 프로필"; textSize = 24f })
+        page.addView(TextView(this).apply { text = "비회원 프로필"; textSize = 26f; setTypeface(typeface, android.graphics.Typeface.BOLD); setPadding(0, 0, 0, page.paddingBottom) })
         action("로그인 옵션") { showLoginOptions() }
         action("이 기기의 즐겨찾기") { openFavorites() }
         val guide = TextView(this).apply {
@@ -604,6 +625,13 @@ class MainActivity : Activity() {
             }
             AlertDialog.Builder(this).setTitle("목적지 좌표").setMessage("${row.name}\n$coords").setPositiveButton("확인", null).show()
         }
+        val extraToggle = field(R.id.detail_extra_toggle)
+        extraToggle.setOnClickListener {
+            val extra = sheet.findViewById<View>(R.id.detail_extra)
+            val opening = extra.visibility != View.VISIBLE
+            extra.visibility = if (opening) View.VISIBLE else View.GONE
+            extraToggle.text = if (opening) "추가 정보 접기" else "추가 정보 보기"
+        }
         val unitToggle = field(R.id.detail_toggle_units)
         unitToggle.setOnClickListener {
             val units = field(R.id.detail_units)
@@ -635,11 +663,13 @@ class MainActivity : Activity() {
             renderObservation(sheet, current, detail, now)
             field(R.id.detail_specs).text = detail.asOf.takeIf { it.isNotBlank() }?.let { "관측 기준  ${koreanTime(it)} (한국시간)" } ?: "관측 시각 미제공"
             unitToggle.visibility = View.VISIBLE
+            extraToggle.visibility = View.VISIBLE
             for ((name, value) in listOf("이용 제한" to detail.restrictions, "운영 시간" to detail.hours, "운영사" to detail.operator, "문의 전화" to detail.phone, "커넥터" to detail.connector,
                     "출력" to detail.output, "충전 요금" to detail.chargingRate,
                     "주차 요금" to detail.parkingFee)) {
-                val table = sheet.findViewById<LinearLayout>(R.id.detail_table)
-                val line = LinearLayout(this).apply { minimumHeight = (30 * resources.displayMetrics.density).toInt() }
+                val primary = name == "이용 제한" || name == "운영 시간"
+                val table = sheet.findViewById<LinearLayout>(if (primary && !value.isNullOrBlank()) R.id.detail_table else R.id.detail_extra)
+                val line = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; minimumHeight = (44 * resources.displayMetrics.density).toInt() }
                 line.addView(TextView(this).apply { text = name }, LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f))
                 line.addView(TextView(this).apply { text = value ?: "정보 없음" }, LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 2f))
                 table.addView(line)
@@ -688,7 +718,7 @@ class MainActivity : Activity() {
     }
 
     private fun renderPin(recenter: Boolean) {
-        text(R.id.selection).text = candidateName ?: "선택한 핀 · ${format(candidate)}"
+        locationMessage = ""
         preview?.apply {
             if (recenter) center = candidate
             pin = candidate
@@ -746,14 +776,16 @@ class MainActivity : Activity() {
             } catch (_: SecurityException) { /* Permission changed while checking providers. */ }
         }
         if (started) {
-            text(R.id.selection).text = "현재 위치 확인 중 · 핀을 직접 선택할 수도 있습니다."
+            locationMessage = "현재 위치 확인 중 · 핀을 직접 선택할 수도 있습니다."
+            updateViewMode()
             handler.postDelayed(timeout, 12000)
         } else locationUnavailable()
     }
 
     private fun locationUnavailable() {
         stopLocation()
-        text(R.id.selection).text = "현재 위치 확인 불가 · 장소를 검색하거나 핀을 선택하세요."
+        locationMessage = "현재 위치 확인 불가 · 장소를 검색하거나 핀을 선택하세요."
+        updateViewMode()
     }
 
     private fun stopLocation() {
@@ -863,7 +895,7 @@ class MainActivity : Activity() {
             val row = item.row
             card.findViewById<TextView>(R.id.card_title).apply {
                 text = "${item.rank}위 · ${row.name}"
-                textSize = if (item.rank == 1) 21f else 18f
+                textSize = 19f
             }
             val distance = String.format(Locale.KOREA, "직선거리 %.2f km", row.meters / 1000.0)
             val quality = if (getString(R.string.wattup_api_base_url).isNotBlank() && row.asOf.isEmpty()) " · 관측 시각 미제공" else ""
@@ -876,8 +908,7 @@ class MainActivity : Activity() {
             }
             card.findViewById<TextView>(R.id.card_reason).text = item.reason
             card.findViewById<View>(R.id.card_body).setOnClickListener { openDetail(row.at(System.currentTimeMillis())) }
-            val width = (resources.displayMetrics.widthPixels * (if (item.rank == 1) 0.83f else 0.73f)).toInt()
-            cards.addView(card, width, LayoutParams.MATCH_PARENT)
+            cards.addView(card)
         }
     }
 

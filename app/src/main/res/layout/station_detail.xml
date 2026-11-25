@@ -1,29 +1,28 @@
-<LinearLayout android:orientation="vertical" xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:background="#FFFFFF">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#FFFFFF">
     <ScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:orientation="vertical" android:padding="20dp">
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
-            <TextView android:id="@+id/detail_title" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textSize="22sp" android:textColor="#17352F" android:textStyle="bold" />
-            <Button android:id="@+id/detail_favorite" android:layout_width="48dp" android:layout_height="48dp" android:background="@drawable/control" android:textSize="22sp" android:text="☆" />
-            <Button android:id="@+id/detail_close" android:layout_width="48dp" android:layout_height="48dp" android:background="@drawable/control" android:contentDescription="닫기" android:text="×" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="30dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+                <TextView android:id="@+id/detail_title" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textSize="24sp" android:textColor="@color/ink" android:textStyle="bold" />
+                <Button android:id="@+id/detail_favorite" android:layout_width="48dp" android:layout_height="48dp" android:background="@drawable/control" android:textSize="22sp" android:text="☆" />
+                <Button android:id="@+id/detail_close" android:layout_width="48dp" android:layout_height="48dp" android:background="@drawable/control" android:contentDescription="닫기" android:text="×" />
+            </LinearLayout>
+            <TextView android:id="@+id/detail_location" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/body" android:paddingTop="8dp" />
+            <TextView android:id="@+id/detail_condition" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/secondary" android:textSize="13sp" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingTop="16dp">
+                <TextView android:id="@+id/detail_current" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textSize="18sp" />
+                <TextView android:id="@+id/detail_forecast" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textSize="18sp" android:accessibilityLiveRegion="polite" android:textColor="@color/ink" android:textStyle="bold" />
+            </LinearLayout>
+            <ProgressBar android:id="@+id/detail_gauge" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="100" android:visibility="gone" android:progressTint="@color/body" />
+            <Button android:id="@+id/detail_help" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ⓘ 확률의 의미" android:background="?android:attr/selectableItemBackground" />
+            <TextView android:id="@+id/detail_fresh" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/control" android:padding="8dp" />
+            <TextView android:id="@+id/detail_counts" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingVertical="12dp" android:textColor="@color/body" />
+            <LinearLayout android:id="@+id/detail_table" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" />
+            <Button android:id="@+id/detail_extra_toggle" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="추가 정보 보기" android:visibility="gone" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:id="@+id/detail_extra" android:visibility="gone" />
+            <Button android:id="@+id/detail_toggle_units" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="충전기별 상태 보기" android:visibility="gone" />
+            <TextView android:id="@+id/detail_units" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" android:paddingBottom="8dp" />
+            <TextView android:id="@+id/detail_specs" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingTop="12dp" />
         </LinearLayout>
-        <TextView android:id="@+id/detail_location" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#17352F" />
-        <TextView android:id="@+id/detail_condition" android:layout_width="match_parent" android:layout_height="wrap_content" />
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingTop="16dp">
-            <TextView android:id="@+id/detail_current" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textSize="18sp" />
-            <TextView android:id="@+id/detail_forecast" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textSize="18sp" android:accessibilityLiveRegion="polite" />
-        </LinearLayout>
-        <ProgressBar android:id="@+id/detail_gauge" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="100" android:visibility="gone" />
-        <Button android:id="@+id/detail_help" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ⓘ 확률의 의미" />
-        <TextView android:id="@+id/detail_fresh" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/control" android:padding="8dp" />
-        <TextView android:id="@+id/detail_counts" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingVertical="8dp" />
-        <LinearLayout android:id="@+id/detail_table" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" />
-        <Button android:id="@+id/detail_toggle_units" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="충전기별 상태 보기" android:visibility="gone" />
-        <TextView android:id="@+id/detail_units" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" android:paddingBottom="8dp" />
-        <TextView android:id="@+id/detail_specs" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingTop="12dp" />
-    </LinearLayout>
     </ScrollView>
-    <Button android:id="@+id/detail_route" android:layout_width="match_parent" android:layout_height="48dp" android:background="@drawable/primary" android:textColor="#FFFFFF" android:text="길안내" />
+    <Button android:id="@+id/detail_route" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/primary" android:textColor="#FFFFFF" android:text="길안내" android:layout_margin="12dp" android:minHeight="52dp" />
 </LinearLayout>

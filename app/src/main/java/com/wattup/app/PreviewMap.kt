@@ -24,8 +24,8 @@ class PreviewMap(context: Context, private val select: (SearchPoint) -> Unit,
     private val span = 0.04
 
     override fun onDraw(canvas: Canvas) {
-        canvas.drawColor(0xffedf4f2.toInt())
-        brush.color = 0xffc8d9d3.toInt()
+        canvas.drawColor(0xfff9fafb.toInt())
+        brush.color = 0xffe5e7eb.toInt()
         for (i in 1..7) {
             val x = width * i / 8f
             val y = height * i / 8f
@@ -45,7 +45,7 @@ class PreviewMap(context: Context, private val select: (SearchPoint) -> Unit,
             hits += station to android.graphics.RectF(sx - badge.width / 2f, minOf(top, sy - 5),
                 sx + badge.width / 2f, maxOf(top + badge.height, sy + 5))
         }
-        brush.color = 0xff006854.toInt()
+        brush.color = 0xff374151.toInt()
         val x = (0.5 + (pin.longitude - center.longitude) / span) * width
         val y = (0.5 - (pin.latitude - center.latitude) / span) * height
         canvas.drawCircle(x.toFloat(), y.toFloat(), 8 * resources.displayMetrics.density, brush)
