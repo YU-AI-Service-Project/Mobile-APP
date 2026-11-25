@@ -8,12 +8,13 @@ data class StationDetail(val asOf: String, val targetAt: String?, val probabilit
                          val current: StationRow? = null, val restrictions: String? = null,
                          val operator: String? = null, val phone: String? = null,
                          val chargers: List<ChargerObservation> = emptyList(), val speedText: String? = null,
-                         val predictionExpiresAt: Long? = null) {
+                         val predictionExpiresAt: Long? = null, val demoForecast: Boolean = false) {
     val percent = probability?.takeIf { it in 0.0..1.0 }?.let { (it * 100).roundToInt() }
     val targetLabel: String? by lazy { targetAt?.let(::koreanTime) }
     val forecastLabel get() = targetLabel?.let { "30분 후 가용 확률\n$forecastText · $it" } ?: "30분 후 · $forecastText"
     val forecastText get() = when {
         percent == null -> "예측 정보 부족"
+        demoForecast -> "시연값 $percent%"
         probability!! > 0 && percent == 0 -> "1% 미만"
         probability < 1 && percent == 100 -> "99% 초과"
         else -> "$percent%"

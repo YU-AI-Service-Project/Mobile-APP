@@ -14,6 +14,13 @@ val backendUrl = providers.environmentVariable("WATTUP_API_BASE_URL")
     .orElse(localConfig.getProperty("WATTUP_API_BASE_URL", ""))
 
 android {
+    buildTypes {
+        getByName("debug") {
+            resValue("bool", "demo_server_forecast", providers.environmentVariable("WATTUP_DEMO_FORECAST")
+                .orElse(localConfig.getProperty("WATTUP_DEMO_FORECAST", "false")).get().toBoolean().toString())
+        }
+        getByName("release") { resValue("bool", "demo_server_forecast", "false") }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -31,6 +38,12 @@ android {
         resValue("string", "kakao_native_app_key", nativeKey.get())
     }
 }
+tasks.withType<Test>().configureEach {
+    val fixtureUrl = providers.environmentVariable("WATTUP_TEST_FIXTURE_URL").orElse("")
+    inputs.property("fixtureUrl", fixtureUrl)
+    outputs.upToDateWhen { fixtureUrl.get().isBlank() }
+}
+
 dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.json:json:20240303")

@@ -70,7 +70,7 @@ class MainActivity : Activity() {
     private var recommendationNotice = ""
     private val source: StationSource by lazy {
         val url = getString(R.string.wattup_api_base_url)
-        if (url.isBlank()) NearbySource(applicationContext) else HttpStationSource(url)
+        if (url.isBlank()) NearbySource(applicationContext) else HttpStationSource(url, demoForecast = resources.getBoolean(R.bool.demo_server_forecast))
     }
     private val guestLibrary by lazy { GuestLibrary(this) }
     private val manager by lazy { getSystemService(LOCATION_SERVICE) as LocationManager }

@@ -11,13 +11,15 @@ internal class UnsupportedFilter : IOException("지원하지 않는 충전 조�
 
 /** Public Spring Boot API. The base URL includes /api. */
 internal class HttpStationSource(private val base: String, private val now: () -> Long = System::currentTimeMillis,
+    private val demoForecast: Boolean = false,
     private val connect: (URL) -> HttpURLConnection = { it.openConnection() as HttpURLConnection }
 ) : StationSource {
-    override val description = "충전소 서버"
+    override val description = if (demoForecast) "충전소 서버 · 예측 시연" else "충전소 서버"
     private fun encode(value: String) = URLEncoder.encode(value, "UTF-8").replace("+", "%20")
 
     private fun <T> get(path: String, params: Map<String, String>, decode: (JSONObject) -> T): T {
-        if (!base.startsWith("https://")) throw IOException("HTTPS 서버 주소 설정 필요")
+        val localDemo = demoForecast && URL(base).let { it.protocol == "http" && it.host in setOf("10.0.2.2", "127.0.0.1", "localhost") }
+        if (!localDemo && !base.startsWith("https://")) throw IOException("HTTPS 서버 주소 설정 필요")
         val query = params.entries.joinToString("&") { encode(it.key) + "=" + encode(it.value) }
         val connection = connect(URL(base.trimEnd('/') + path + "?" + query))
         try {
@@ -121,7 +123,7 @@ internal class HttpStationSource(private val base: String, private val now: () -
                 val c = s.getJSONObject("current")
                 if (c.getString("profile") != filter.profile) throw IOException("충전 조건 불일치")
                 val available = c.optInt("availableCount", 0)
-                val time = s.getString("asOf")
+                val time = s.optional("asOf").orEmpty()
                 val isFresh = fresh(time, s.getString("freshness"))
                 val reliable = validCounts(c, requireTotal = true)
                 val state = availability(c, isFresh && reliable)
@@ -173,7 +175,7 @@ internal class HttpStationSource(private val base: String, private val now: () -
         val detail = StationDetail(current.asOf, null, null,
             selected.mapNotNull { it.optional("connector") }.distinct().joinToString(" · ").ifEmpty { null },
             selected.mapNotNull { it.optional("outputKw") }.distinct().joinToString(" / ").takeIf { it.isNotEmpty() }?.plus(" kW"),
-            station.optional("address"), station.optional("feeInfo"), station.optional("parkingInfo"), station.optional("operatingHours"), current,
+            station.optional("address"), station.optional("feeInfo"), station.optJSONObject("parkingInfo")?.let { if (it.isNull("free")) null else if (it.getBoolean("free")) "무료 주차" else "무료 주차 아님" } ?: station.optional("parkingInfo"), station.optional("operatingHours"), current,
             station.optional("usageRestrictions"), station.optJSONObject("operator")?.optional("name"),
             station.optJSONObject("operator")?.optional("phone"), selected.map {
                 val observed = it.optional("asOf")
@@ -198,6 +200,7 @@ internal class HttpStationSource(private val base: String, private val now: () -
         }
         if (current.status == Availability.UNKNOWN) return detail
         onCurrent(detail)
+        if (demoForecast) return previewForecast(detail, current, filter)
         val p = try {
             get("$path/prediction", params + ("mode" to "FIXED_30M")) {
                 if (it.optString("stationId") == row.id && it.optString("profile") == filter.profile &&
@@ -208,11 +211,20 @@ internal class HttpStationSource(private val base: String, private val now: () -
         return detail.copy(probability = probability, targetAt = p?.optional("forecastAt")?.takeIf { probability != null })
     }
 
+    private fun previewForecast(detail: StationDetail, row: StationRow, filter: NearbyFilter): StationDetail {
+        val observed = instant(row.asOf) ?: return detail
+        if (row.at(now()).status == Availability.UNKNOWN || filter.speed == Speed.FAST) return detail
+        val format = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", java.util.Locale.US)
+        format.timeZone = java.util.TimeZone.getTimeZone("UTC")
+        return detail.copy(probability = 0.75, demoForecast = true,
+            targetAt = format.format(java.util.Date(observed + 1800000L)), predictionExpiresAt = row.expiresAt)
+    }
+
     private fun getCurrentRow(station: JSONObject, row: StationRow, filter: NearbyFilter): StationRow {
         val counts = station.optJSONObject("current") ?: throw IOException("현재 상태 누락")
         if (counts.optString("profile") != filter.profile) throw IOException("충전 조건 불일치")
         return try {
-            val time = station.getString("asOf")
+            val time = station.optional("asOf").orEmpty()
             val isFresh = fresh(time, station.getString("freshness"))
             val reliable = validCounts(counts, requireTotal = true)
             row.copy(asOf = time, expiresAt = instant(time)?.plus(600000L), available = counts.optInt("availableCount", 0), total = counts.count("totalCount"),
@@ -222,8 +234,9 @@ internal class HttpStationSource(private val base: String, private val now: () -
     }
 
     override fun recommendations(point: SearchPoint, filter: NearbyFilter): Recommendations {
-        return get("/recommendations", query(point, filter) + mapOf("mode" to "FIXED_30M", "limit" to "3")) { response ->
-            if (response.optString("profile") != filter.profile || response.optString("mode") != "FIXED_30M")
+        val mode = if (demoForecast) "ARRIVAL_ETA" else "FIXED_30M"
+        return get("/recommendations", query(point, filter) + mapOf("mode" to mode, "limit" to "3")) { response ->
+            if (response.optString("profile") != filter.profile || response.optString("mode") != mode)
                 throw IOException("추천 조건 불일치")
             val items = response.items().sortedBy { it.getInt("rank") }.mapNotNull { item ->
                 val p = item.optJSONObject("prediction")
@@ -238,14 +251,15 @@ internal class HttpStationSource(private val base: String, private val now: () -
                 val row = StationRow(item.getString("stationId"), item.getString("name"), null,
                     item.getInt("straightDistanceM"), "지원 종류 정보 없음", available,
                     c.count("totalCount"), state, time, expires, c.count("chargingCount"), c.count("otherCount"), c.count("unknownCount"), staleObservation = !isFresh, countsReliable = reliable)
-                val probability = prediction(p, row, filter, observationTimeMissing =
+                val probability = if (demoForecast) null else prediction(p, row, filter, observationTimeMissing =
                     time.isEmpty() && reliable && availability(c, c.optString("freshness") == "FRESH") != Availability.UNKNOWN)
                 val info = StationDetail(row.asOf, p?.optional("forecastAt")?.takeIf { probability != null },
                     probability, null, item.optional("outputKw")?.plus(" kW"), null, null, null, null,
                     predictionExpiresAt = p?.optional("asOf")?.let(::instant)?.plus(600000L))
-                Recommendation(row, info, item.optString("reason"), item.getInt("rank"))
+                Recommendation(row, if (demoForecast) previewForecast(info, row, filter) else info, item.optString("reason"), item.getInt("rank"))
             }.take(3)
             val basis = when (response.optString("rankingBasis")) {
+                "DISTANCE_CURRENT_STATUS_OUTPUT" -> "거리·현재 상태·출력 기준"
                 "CURRENT_AVAILABILITY", "CURRENT_STATUS" -> "현재 상태 기준"
                 "DISTANCE_CURRENT_STATUS_OUTPUT_PREDICTION" -> "거리·현재 상태·출력·예측 기준"
                 else -> "서버 추천"

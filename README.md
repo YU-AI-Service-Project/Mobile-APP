@@ -28,6 +28,24 @@
 
 Android Studio가 만든 `local.properties`의 `sdk.dir`은 유지한다. 실제 키와 로컬 설정은 Git에서 제외한다. [카카오 지도 Android SDK 시작 안내](https://apis.map.kakao.com/android_v2/docs/getting-started/quickstart/)
 
+## 로컬 백엔드와 예측 시연
+
+실행 중인 팀 Spring Boot 서버와 데이터가 있는 MySQL이 필요하다. Android 에뮬레이터에서 PC의 서버를 사용할 때 이 폴더의 `local.properties`에 아래 두 값을 설정하고 디버그 앱을 다시 빌드한다. 서버 포트는 실제 포트에 맞춘다.
+
+```properties
+WATTUP_API_BASE_URL=http://10.0.2.2:8080/api
+WATTUP_DEMO_FORECAST=true
+```
+
+이 모드의 상세·즐겨찾기·추천은 지원 프로필의 신선한 관측에 한해 고정된 **시연값 75%**를 관측 30분 뒤 값으로 표시한다. 주소·현재 대수·장소 검색·추천 순위와 근거는 백엔드 응답을 사용한다. 추천은 서버가 지원하는 `ARRIVAL_ETA`로 받아오며 시연값은 순위 계산에 사용하지 않는다. 수집된 데이터가 없으면 검색 결과도 비어 있다. 장소명 검색에는 서버의 카카오 키가 필요하다. 릴리스 빌드에서는 시연 옵션이 꺼지고 HTTPS 주소가 필요하다.
+
+통합 테스트는 격리된 빈 개발 DB에 백엔드 마이그레이션을 적용하고 `app/src/test/resources/backend-preview.sql`을 한 번 실행한 뒤 진행한다. 검증용 관측이 10분을 넘기기 전에 Windows에서 다음 명령을 실행한다. 주소는 **테스트를 실행하는 PC** 기준이다.
+
+```powershell
+$env:WATTUP_TEST_FIXTURE_URL = "http://127.0.0.1:8080/api"
+.\gradlew.bat :app:testDebugUnitTest
+```
+
 ## 화면과 API의 데이터 기준
 
 - 지도와 목록은 같은 검색 결과를 사용한다. 선택 반경은 500m, 1km, 3km, 5km, 10km다. 지원 충전 방식은 `supportedSpeeds` 또는 `supportedSpeedText`를 읽고, 필요하면 충전기 목록으로 확인한다.
