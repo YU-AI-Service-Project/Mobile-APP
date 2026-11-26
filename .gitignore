@@ -1,0 +1,8 @@
+/.gradle/
+/.idea/
+/local.properties
+**/build/
+/.kotlin/
+hs_err_pid*.log
+*.jks
+*.keystore

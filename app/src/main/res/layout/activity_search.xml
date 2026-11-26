@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:fitsSystemWindows="true" android:background="@color/surface">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:padding="8dp">
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:id="@+id/page_title" android:text="내 주변 충전소" android:textSize="25sp" android:textColor="@color/ink" android:layout_weight="1" android:padding="12dp" android:textStyle="bold" />
+        <Button android:layout_width="wrap_content" android:layout_height="48dp" android:id="@+id/place_search" android:text="장소 검색" android:background="@drawable/control" android:textColor="@color/body" android:minWidth="48dp" android:paddingHorizontal="12dp" android:layout_margin="2dp" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingHorizontal="12dp">
+        <ToggleButton android:layout_width="0dp" android:layout_height="wrap_content" android:id="@+id/available" android:textOn="이용 가능 ✓" android:textOff="이용 가능만" android:background="@drawable/chip" android:textColor="@color/chip_text" android:paddingHorizontal="4dp" android:layout_margin="3dp" android:layout_weight="1" android:minHeight="48dp" />
+        <Button android:id="@+id/radius" android:layout_width="0dp" android:layout_height="wrap_content" android:background="@drawable/control" android:paddingHorizontal="4dp" android:text="반경 3km" android:layout_weight="1" android:minHeight="48dp" android:layout_margin="3dp" />
+        <Button android:id="@+id/filter_more" android:text="필터 더보기" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:minHeight="48dp" android:layout_margin="3dp" android:paddingHorizontal="4dp" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:visibility="gone" android:id="@+id/filters" android:paddingHorizontal="12dp">
+        <ToggleButton android:layout_width="0dp" android:layout_height="wrap_content" android:id="@+id/fast" android:textOn="급속 ✓" android:textOff="급속 50kW+" android:background="@drawable/chip" android:textColor="@color/chip_text" android:paddingHorizontal="2dp" android:layout_margin="2dp" android:layout_weight="1" android:minHeight="48dp" android:textSize="13sp" />
+        <ToggleButton android:layout_width="0dp" android:layout_height="wrap_content" android:id="@+id/slow" android:textOn="완속 ✓" android:textOff="완속" android:background="@drawable/chip" android:textColor="@color/chip_text" android:paddingHorizontal="2dp" android:layout_margin="2dp" android:layout_weight="1" android:minHeight="48dp" android:textSize="13sp" />
+        <ToggleButton android:layout_width="0dp" android:layout_height="wrap_content" android:id="@+id/combo" android:textOn="DC콤보 ✓" android:textOff="DC콤보" android:background="@drawable/chip" android:textColor="@color/chip_text" android:paddingHorizontal="2dp" android:layout_margin="2dp" android:layout_weight="1" android:minHeight="48dp" android:textSize="13sp" />
+        <Button android:layout_width="0dp" android:layout_height="wrap_content" android:id="@+id/reset" android:text="초기화" android:background="@drawable/control" android:textColor="@color/body" android:minWidth="48dp" android:paddingHorizontal="2dp" android:layout_margin="2dp" android:layout_weight="1" android:minHeight="48dp" android:textSize="13sp" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingHorizontal="12dp">
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:id="@+id/result" android:text="" android:textSize="13sp" android:textColor="@color/body" android:padding="8dp" android:paddingHorizontal="6dp" android:paddingVertical="10dp" android:layout_weight="1" />
+        <Button android:layout_width="wrap_content" android:layout_height="48dp" android:id="@+id/refresh" android:text="새로고침" android:background="@drawable/control" android:textColor="@color/body" android:minWidth="48dp" android:paddingHorizontal="12dp" android:layout_margin="2dp" android:textSize="13sp" />
+    </LinearLayout>
+    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent" android:id="@+id/map_container">
+</FrameLayout>
+        <ListView android:layout_width="match_parent" android:layout_height="match_parent" android:id="@+id/station_list" android:padding="16dp" android:divider="@android:color/transparent" android:dividerHeight="12dp" android:background="@color/canvas" android:clipToPadding="false" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:id="@+id/recommend_panel" android:orientation="vertical" android:padding="16dp" android:background="@color/canvas">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/recommend_status" android:text="" android:textSize="16sp" android:textColor="@color/body" android:paddingBottom="12dp" />
+            <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:id="@+id/recommend_scroll">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/recommend_cards" android:orientation="vertical" android:padding="2dp" android:clipToPadding="false">
+</LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+        <ProgressBar android:id="@+id/nearby_loading" android:layout_width="40dp" android:layout_height="40dp" android:layout_gravity="center" android:contentDescription="충전소 조회 중" android:visibility="gone" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/hint" android:text="" android:textSize="13sp" android:textColor="@color/body" android:layout_margin="8dp" android:padding="7dp" android:background="@drawable/control" />
+        <Button android:layout_width="wrap_content" android:layout_height="48dp" android:id="@+id/notice" android:text="새 위치의 추천 보기" android:background="@drawable/control" android:textColor="@color/body" android:minWidth="48dp" android:paddingHorizontal="12dp" android:layout_margin="2dp" android:layout_gravity="top|center_horizontal" android:visibility="gone" />
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="bottom|end" android:orientation="vertical" android:layout_margin="6dp">
+            <Button android:layout_width="wrap_content" android:layout_height="48dp" android:id="@+id/locate" android:text="내 위치" android:background="@drawable/control" android:textColor="@color/body" android:minWidth="48dp" android:paddingHorizontal="12dp" android:layout_margin="2dp" />
+        </LinearLayout>
+        <Button android:layout_width="wrap_content" android:layout_height="48dp" android:id="@+id/search" android:text="이 위치 주변 검색" android:background="@drawable/primary" android:textColor="#FFFFFF" android:minWidth="48dp" android:paddingHorizontal="12dp" android:layout_margin="2dp" android:layout_gravity="bottom|center_horizontal" android:visibility="gone" android:layout_marginBottom="12dp" />
+    </FrameLayout>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/selection" android:text="" android:textSize="12sp" android:textColor="@color/body" android:paddingHorizontal="12dp" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:padding="6dp" android:background="@color/surface" android:elevation="2dp">
+        <Button android:layout_width="0dp" android:layout_height="48dp" android:id="@+id/toggle_view" android:text="목록 보기" android:background="@drawable/control" android:textColor="@color/body" android:minWidth="48dp" android:paddingHorizontal="12dp" android:layout_margin="2dp" android:layout_weight="1" />
+        <Button android:layout_width="0dp" android:layout_height="48dp" android:id="@+id/top_three" android:text="Top-3 추천" android:background="@drawable/control" android:textColor="@color/body" android:minWidth="48dp" android:paddingHorizontal="12dp" android:layout_margin="2dp" android:layout_weight="1" />
+        <Button android:layout_width="0dp" android:layout_height="48dp" android:id="@+id/my_page" android:text="마이페이지" android:background="@drawable/control" android:textColor="@color/body" android:minWidth="48dp" android:paddingHorizontal="12dp" android:layout_margin="2dp" android:layout_weight="1" />
+    </LinearLayout>
+</LinearLayout>

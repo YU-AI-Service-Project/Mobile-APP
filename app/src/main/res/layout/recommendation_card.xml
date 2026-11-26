@@ -1,0 +1,7 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/card_body" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="30dp" android:background="@drawable/control" android:focusable="true" android:clickable="true" android:layout_marginBottom="12dp" android:elevation="1dp">
+    <TextView android:id="@+id/card_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:textStyle="bold" android:textSize="19sp" android:textColor="@color/ink" />
+    <TextView android:id="@+id/card_state" android:paddingTop="10dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="15sp" android:textColor="@color/body" />
+    <TextView android:id="@+id/card_forecast" android:textSize="17sp" android:textStyle="bold" android:paddingTop="8dp" android:textColor="@color/ink" android:layout_width="match_parent" android:layout_height="wrap_content" />
+    <ProgressBar android:id="@+id/card_gauge" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="100" android:progressTint="@color/body" />
+    <TextView android:id="@+id/card_reason" android:paddingTop="8dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:textColor="@color/secondary" />
+</LinearLayout>
